@@ -13,14 +13,17 @@ app.use(express.static (path.join(__dirname, "public")));
 
 let posts =[
     {
+        id : "1a",
         username : "Coder",
         content : "I love coding"
     },
     {
+        id : "2b",
         username : "Manali Patel",
         content : "Hardwork is important to achieve success"
     },
     {
+        id : "3c",
         username : "SwetaKumari",
         content : "I got selected for my 1st internship",
     }
@@ -41,6 +44,16 @@ app.post("/posts", (req, res)=>{
     // res.send("post request working");
     res.redirect("/posts");
 })
+
+app.get("/posts/:id",(req, res)=>{
+   let { id } = req.params;
+   let post = posts.find((p) => id === p.id);
+   console.log(id);
+//    res.send("request working");
+   res.render("show.ejs", {post});
+})
+
+
 
 app.listen(port , ()=>{
     console.log(`server is listening on port ${port}`);
