@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const path = require("path");
+const { v4: uuidv4 } = require('uuid');
+uuidv4(); //generate random unique ids
 
 app.use(express.urlencoded({extended : true}));
 
@@ -13,17 +15,17 @@ app.use(express.static (path.join(__dirname, "public")));
 
 let posts =[
     {
-        id : "1a",
+        id : uuidv4(),
         username : "Coder",
         content : "I love coding"
     },
     {
-        id : "2b",
+        id : uuidv4(),
         username : "Manali Patel",
         content : "Hardwork is important to achieve success"
     },
     {
-        id : "3c",
+        id : uuidv4(),
         username : "SwetaKumari",
         content : "I got selected for my 1st internship",
     }
@@ -40,7 +42,8 @@ app.get("/posts/new" , (req, res)=>{
 
 app.post("/posts", (req, res)=>{
     let {username , content} = req.body;
-    posts.push({username , content})
+    let id = uuidv4();
+    posts.push({id , username , content})
     // res.send("post request working");
     res.redirect("/posts");
 })
@@ -53,6 +56,22 @@ app.get("/posts/:id",(req, res)=>{
    res.render("show.ejs", {post});
 })
 
+
+app.patch("/posts/:id", (req, res)=>{
+    let {id} = req.params;
+    let newContent = req.body.content;
+    let post = posts.find((p) => id === p.id);
+    post.content = newContent;
+    console.log(newContent)
+    res.send("patch request working!");
+})
+
+
+app.get("/posts/:id/edit",(req, res)=>{
+    let {id} = req.params;
+    let post = posts.find((p)=> id === p.id);
+    res.render("edit.ejs" , {post});
+})
 
 
 app.listen(port , ()=>{
