@@ -4,8 +4,10 @@ const port = 3000;
 const path = require("path");
 const { v4: uuidv4 } = require('uuid');
 uuidv4(); //generate random unique ids
+const methodOverride = require("method-override") //
 
 app.use(express.urlencoded({extended : true}));
+app.use(methodOverride("_method"));  // override with POST having ?_method=PATCH
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -63,7 +65,7 @@ app.patch("/posts/:id", (req, res)=>{
     let post = posts.find((p) => id === p.id);
     post.content = newContent;
     console.log(newContent)
-    res.send("patch request working!");
+    res.redirect("/posts")
 })
 
 
